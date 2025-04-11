@@ -76,9 +76,10 @@
   </header>
   <div class="container">
     <div class="search-bar">
-      <input type="text"id="searchLocation"placeholder="위치 검색...">
-      <input type="text"id="searchCode"placeholder="품목코드 검색...">
-      <input type="text"id="searchName"placeholder="품목명 검색...">
+      <input type="hidden"id="searchLocation" placeholder="위치 검색...">
+      <input type="hidden"id="searchCode" placeholder="품목코드 검색...">
+      <input type="hidden"id="searchName" placeholder="품목명 검색...">
+      <input type="text" id="IntegratedSearch" placeholder="통합검색">
     </div>
     <div class="result-count"id="resultCount"></div>
     <table>
@@ -170,7 +171,7 @@
       { 위치:"5-2", 코드:"", 명칭:"축구 검정", 색상:""},
       { 위치:"5-3", 코드:"", 명칭:"양말", 색상:"PU"},
       { 위치:"5-3", 코드:"", 명칭:"양말", 색상:"PK"},
-      { 위치:"5-3", 코드:"", 명칭:"양말", 색상:"하늘색"},
+      { 위치:"5-3", 코드:"", 명칭:"양말", 색상:"MT"},
       { 위치:"5-3", 코드:"", 명칭:"양말", 색상:"OR"},
       { 위치:"5-3", 코드:"", 명칭:"FC안양 맨투맨", 색상:"BK"},
       { 위치:"5-3", 코드:"", 명칭:"FC안양 맨투맨", 색상:"GA"},
@@ -252,7 +253,8 @@
     const inputs = [
       document.getElementById("searchLocation"),
       document.getElementById("searchCode"),
-      document.getElementById("searchName")
+      document.getElementById("searchName"),
+      document.getElementById("IntegratedSearch")
     ];
 
     function renderTable(data) {
@@ -271,15 +273,18 @@
       });
     }
 
-    function filterData() {
-      const [locVal, codeVal, nameVal] = inputs.map(input => input.value.toLowerCase());
-      const filtered = inventoryData.filter(item =>
-        item.위치.toLowerCase().includes(locVal) &&
-        item.코드.toLowerCase().includes(codeVal) &&
-        item.명칭.toLowerCase().includes(nameVal)
-      );
-      renderTable(filtered);
-    }
+function filterData() {
+  const integratedVal = document.getElementById("IntegratedSearch").value.toLowerCase();
+
+  const filtered = inventoryData.filter(item =>
+    item.위치.toLowerCase().includes(integratedVal) ||
+    item.코드.toLowerCase().includes(integratedVal) ||
+    item.명칭.toLowerCase().includes(integratedVal)
+  );
+
+  renderTable(filtered);
+}
+
 
     inputs.forEach(input => input.addEventListener("input", filterData));
     renderTable(inventoryData);
