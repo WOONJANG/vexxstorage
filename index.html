@@ -155,7 +155,7 @@
           <th scope="col">품목코드</th>
           <th scope="col">색상</th>
           <th scope="col">품목명</th>
-          <th scope="col">상세정보</th>
+          <th scope="col">재고</th>
         </tr>
       </thead>
       <tbody id="inventoryTable"></tbody>
@@ -945,7 +945,7 @@ productColor: "BK",
           <td>${item.productCode}</td>
           <td><span class="color-box" style="background-color: ${colorHex};"></span>${item.productColor}</td>
           <td>${item.productName}</td>
-          <td><button class="toggle-detail">상세보기</button></td>
+          <td><button class="toggle-detail">재고</button></td>
         `;
   
 // 사이즈 정보 문자열 생성: 숫자 키만 사용
@@ -958,7 +958,7 @@ if (sizeInfo.length > 0) {
   sizeInfo = sizeInfo.slice(0, -2); // 마지막 쉼표와 공백 제거
 }
   
-        // 상세정보 행 생성 (기본적으로 숨김)
+        // 재고 행 생성 (기본적으로 숨김)
         const detailRow = document.createElement("tr");
         detailRow.className = "detail-row";
         detailRow.style.display = "none";
@@ -989,10 +989,10 @@ if (sizeInfo.length > 0) {
         const detailRow = button.closest("tr").nextElementSibling;
         if (detailRow.style.display === "none") {
           detailRow.style.display = "table-row";
-          button.textContent = "상세닫기";
+          button.textContent = "닫기";
         } else {
           detailRow.style.display = "none";
-          button.textContent = "상세보기";
+          button.textContent = "재고";
         }
       }
     });
