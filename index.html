@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport"content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>V-EXX 창고 위치</title>
   <style>
     body {
@@ -46,6 +46,12 @@
       background-color: white;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
+    caption {
+      caption-side: top;
+      text-align: left;
+      font-weight: bold;
+      padding: 0.5rem;
+    }
     th, td {
       padding: 0.75rem;
       border-bottom: 1px solid #ddd;
@@ -60,7 +66,38 @@
       border-radius: 4px;
       display: inline-block;
       border: 1px solid #ccc;
+      margin-right: 0.5rem;
+      vertical-align: middle;
     }
+    .toggle-detail {
+      font-size: 0.9rem;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+    }
+    .detail-row {
+      background-color: #f0f0f0;
+      font-weight: normal;
+    }
+.toggle-detail {
+  background-color: #2c3e50;      /* 어두운 배경 */
+  color: #fff;                    /* 흰색 글씨 */
+  border: none;                   /* 테두리 제거 */
+  border-radius: 5px;             /* 둥근 모서리 */
+  padding: 0.5rem 1rem;           /* 적절한 여백 */
+  cursor: pointer;                /* 마우스 커서 포인터 */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.toggle-detail:hover {
+  background-color: #34495e;      /* 호버 시 약간 밝은 배경 */
+  transform: scale(1.05);         /* 약간 확대 효과 */
+}
+
+.toggle-detail:active {
+  background-color: #1a252f;      /* 클릭 시 어두워진 배경 */
+  transform: scale(0.98);         /* 클릭 효과로 약간 축소 */
+}
+
     @media (min-width: 768px) {
       .search-bar {
         flex-direction: row;
@@ -69,54 +106,65 @@
         flex: 1;
       }
     }
+    /* 스킵 링크 스타일 : 기본은 화면 밖에 숨겨짐, 포커스 시 보임 */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    .skip-link:focus {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 1rem;
+      padding: 0.5rem;
+      background: #000;
+      color: #fff;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
+  <!-- 키보드 사용자를 위한 스킵 링크 -->
+  <a href="#mainContent" class="skip-link">본문 바로가기</a>
+  
   <header>
-    <h1><img src="img/V-EXXlogo.png" alt="V-EXX 로고"><br>재고 위치 검색</h1>
+    <h1>
+      <img src="img/V-EXXlogo.png" alt="V-EXX 로고"><br>
+      재고 위치 검색
+    </h1>
   </header>
-  <div class="container">
+  
+  <main id="mainContent" class="container">
     <div class="search-bar">
-      <input type="hidden"id="searchLocation" placeholder="locate 검색...">
-      <input type="hidden"id="searchCode" placeholder="품목productCode 검색...">
-      <input type="hidden"id="searchName" placeholder="품목명 검색...">
-      <input type="text" id="IntegratedSearch" placeholder="통합검색">
+      <!-- 숨김 필드는 스크린 리더가 불필요하게 읽지 않도록 aria-hidden="true" 적용 -->
+      <input type="hidden" id="searchLocation" placeholder="locate 검색..." aria-hidden="true">
+      <input type="hidden" id="searchCode" placeholder="품목productCode 검색..." aria-hidden="true">
+      <input type="hidden" id="searchName" placeholder="품목명 검색..." aria-hidden="true">
+      <input type="text" id="IntegratedSearch" placeholder="통합검색" aria-label="재고 통합 검색 입력란">
     </div>
-    <div class="result-count"id="resultCount"></div>
+    <div class="result-count" id="resultCount"></div>
     <table>
+<!--      재고 목록: 위치, 품목코드, 색상, 품목명 및 사이즈 상세 정보 -->
       <thead>
         <tr>
-          <th>위치</th>
-          <th>품목코드</th>
-          <th>색상</th>
-          <th>품목명</th>
-<!--          
-          <th>80</th>
-          <th>85</th>
-          <th>90</th>
-          <th>95</th>
-          <th>100</th>
-          <th>105</th>
-          <th>110</th>
-          <th>115</th>
-          <th>120</th>
-          <th>125</th>
-          <th>130</th>
-          <th>135</th>
-          <th>140</th>
--->
+          <th scope="col">위치</th>
+          <th scope="col">품목코드</th>
+          <th scope="col">색상</th>
+          <th scope="col">품목명</th>
+          <th scope="col">상세정보</th>
         </tr>
       </thead>
       <tbody id="inventoryTable"></tbody>
     </table>
-  </div>
-
+  </main>
+  
   <script>
-  window.addEventListener("load", () => {
-    const asciiArt = `
-
-
-
+    window.addEventListener("load", () => {
+      const asciiArt = `
    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
@@ -190,19 +238,11 @@
 @@@         @@                            @      @
 @@@@       @@@                @@          @       
 @@@@       @@@               @@@         @@@      
-
-
-`;
-
-     console.log('%c' + asciiArt, 'background-color: white; color: #000033; font-family: monospace; font-weight: bold;');
-  });
-
-
-
-
-
-
-	  
+      `;
+      console.log('%c' + asciiArt, 'background-color: white; color: #000033; font-family: monospace; font-weight: bold;');
+    });
+  
+    // 재고 데이터 배열 (사이즈 속성 포함)
     const inventoryData = [
 { locate: "1-1", 
 productCode: "VDYP2418", 
@@ -862,29 +902,28 @@ productCode: "-",
 productName: "NC 후드티셔츠", 
 productColor: "BK",
  80:"-", 85:"-", 90:"-", 95:"-", 100:"-", 105:"-", 110:"-", 115:"-", 120:"-", 125:"-", 130:"-", 135:"-", 140:"-"},
-
-
     ];
 
+  
     const colorCodeMap = {
-      WH:"#ffffff",
-      BK:"#000000",
-      GA:"#969696",
-      RD:"#ff0000",
-      BL:"#0617d7",
-      NV:"#2c3e50",
-      NE:"#80e961",
-      GR:"#009900",
-      OR:"#ffa500",
-      YL:"#FFFF00",
-      PK:"#ff3399",
-      MT:"#64b9b2",
-      PU:"#a020f0",
-      IV:"#ece6cc",
-      BE:"#f5dcb7",
-      DG:"#A9A9A9",
+      WH: "#ffffff",
+      BK: "#000000",
+      GA: "#969696",
+      RD: "#ff0000",
+      BL: "#0617d7",
+      NV: "#2c3e50",
+      NE: "#80e961",
+      GR: "#009900",
+      OR: "#ffa500",
+      YL: "#FFFF00",
+      PK: "#ff3399",
+      MT: "#64b9b2",
+      PU: "#a020f0",
+      IV: "#ece6cc",
+      BE: "#f5dcb7",
+      DG: "#A9A9A9",
     };
-
+  
     const table = document.getElementById("inventoryTable");
     const resultCount = document.getElementById("resultCount");
     const inputs = [
@@ -893,53 +932,70 @@ productColor: "BK",
       document.getElementById("searchName"),
       document.getElementById("IntegratedSearch")
     ];
-
+  
     function renderTable(data) {
       resultCount.textContent = `총 ${data.length}개 결과가 검색되었습니다.`;
-      table.innerHTML ="";
+      table.innerHTML = "";
       data.forEach(item => {
+        // 메인 데이터 행 생성
         const row = document.createElement("tr");
-        const colorHex = colorCodeMap[item.productColor] ||"transparent";
+        const colorHex = colorCodeMap[item.productColor] || "transparent";
         row.innerHTML = `
           <td>${item.locate}</td>
           <td>${item.productCode}</td>
-          <td><span class="color-box"style="background-color: ${colorHex};"></span>${item.productColor}</td>
+          <td><span class="color-box" style="background-color: ${colorHex};"></span>${item.productColor}</td>
           <td>${item.productName}</td>
-<!--
-	  <td>${item.size80}</td>
-	  <td>${item.size85}</td>
-	  <td>${item.size90}</td>
-	  <td>${item.size95}</td>
-	  <td>${item.size100}</td>
-	  <td>${item.size105}</td>
-	  <td>${item.size110}</td>
-	  <td>${item.size115}</td>
-	  <td>${item.size120}</td>
-	  <td>${item.size125}</td>
-	  <td>${item.size130}</td>
-	  <td>${item.size135}</td>
-	  <td>${item.size140}</td>
--->        
-`;
+          <td><button class="toggle-detail">상세보기</button></td>
+        `;
+  
+// 사이즈 정보 문자열 생성: 숫자 키만 사용
+let sizeInfo = "";
+const sizeKeys = ["80","85","90","95","100","105","110","115","120","125","130","135","140"];
+sizeKeys.forEach(key => {
+  sizeInfo += `[${key}] ${item[key]}   `;
+});
+if (sizeInfo.length > 0) {
+  sizeInfo = sizeInfo.slice(0, -2); // 마지막 쉼표와 공백 제거
+}
+  
+        // 상세정보 행 생성 (기본적으로 숨김)
+        const detailRow = document.createElement("tr");
+        detailRow.className = "detail-row";
+        detailRow.style.display = "none";
+        detailRow.innerHTML = `<td colspan="5"><strong>사이즈 </strong> ${sizeInfo}</td>`;
+  
         table.appendChild(row);
+        table.appendChild(detailRow);
       });
     }
-
-function filterData() {
-  const integratedVal = document.getElementById("IntegratedSearch").value.toLowerCase();
-
-  const filtered = inventoryData.filter(item =>
-    item.locate.toLowerCase().includes(integratedVal) ||
-    item.productCode.toLowerCase().includes(integratedVal) ||
-    item.productName.toLowerCase().includes(integratedVal)
-  );
-
-  renderTable(filtered);
-}
-
-
+  
+    function filterData() {
+      const integratedVal = document.getElementById("IntegratedSearch").value.toLowerCase();
+      const filtered = inventoryData.filter(item =>
+        item.locate.toLowerCase().includes(integratedVal) ||
+        item.productCode.toLowerCase().includes(integratedVal) ||
+        item.productName.toLowerCase().includes(integratedVal)
+      );
+      renderTable(filtered);
+    }
+  
     inputs.forEach(input => input.addEventListener("input", filterData));
     renderTable(inventoryData);
+  
+    // 확장/축소 버튼 토글 기능
+    document.addEventListener("click", function(event) {
+      if (event.target && event.target.classList.contains("toggle-detail")) {
+        const button = event.target;
+        const detailRow = button.closest("tr").nextElementSibling;
+        if (detailRow.style.display === "none") {
+          detailRow.style.display = "table-row";
+          button.textContent = "상세닫기";
+        } else {
+          detailRow.style.display = "none";
+          button.textContent = "상세보기";
+        }
+      }
+    });
   </script>
 </body>
 </html>
