@@ -497,7 +497,7 @@ productColor: "BE",
  productCode: "VDXP0313", 
 productName: "브이엑스 24 바람막이", 
 productColor: "BK", 
-80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"1", 120:"1", 125:"", 130:"", 135:"", 140:""},
+80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"", 120:"", 125:"", 130:"", 135:"", 140:""},
 { locate: "4-2", 
 productCode: "VDYP0827", 
 productName: "브이엑스 허리로고 라운드 반팔티", 
@@ -616,8 +616,8 @@ productColor: "",
 { locate: "5-2", 
 productCode: "", 
 productName: "축구 검정", 
-productColor: "", 
-80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"", 120:"", 125:"", 130:"", 135:"", 140:""},
+productColor: "BK", 
+80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"", 120:"", 125:"", 130:"", 135:"", 140:"", 아동:"", 성인:""},
 { locate: "5-3", 
 productCode: "", 
 productName: "양말", 
@@ -631,7 +631,7 @@ productColor: "PK",
 { locate: "5-3", 
 productCode: "", 
 productName: "양말", 
-productColor: "MT", 
+productColor: "SB", 
 80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"", 120:"", 125:"", 130:"", 135:"", 140:""},
 { locate: "5-3", 
 productCode: "", 
@@ -696,7 +696,7 @@ productColor: "GR",
 { locate: "5-4", 
 productCode: "", 
 productName: "양말", 
-productColor: "백/검 바코드X",
+productColor: "WK",
  80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"", 120:"", 125:"", 130:"", 135:"", 140:""},
 { locate: "5-4", 
 productCode: "VDZP1341", 
@@ -815,7 +815,7 @@ productColor: "PU",
 { locate: "6-3", 
 productCode: "", 
 productName: "축구스타킹", 
-productColor: "흰/보", 
+productColor: "WP", 
 80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"", 120:"", 125:"", 130:"", 135:"", 140:""},
 { locate: "6-4", 
 productCode: "VDYP0125", 
@@ -912,31 +912,46 @@ productCode: "",
 productName: "NC 후드티셔츠", 
 productColor: "BK",
  80:"", 85:"", 90:"", 95:"", 100:"", 105:"", 110:"", 115:"", 120:"", 125:"", 130:"", 135:"", 140:""},
-{ locate: "테스트", 
-productCode: "test", 
-productName: "테스트입니다.", 
-productColor: "NE",
- 80:"0", 85:"1", 90:"2", 95:"3", 100:"4", 105:"5", 110:"6", 115:"7", 120:"8", 125:"9", 130:"10", 135:"11", 140:"12", 아동:"13", 성인:"14"},      
     ];
 
   
     const colorCodeMap = {
-      WH: "#ffffff",
-      BK: "#000000",
-      GA: "#969696",
-      RD: "#ff0000",
-      BL: "#0617d7",
-      NV: "#2c3e50",
-      NE: "#80e961",
-      GR: "#009900",
-      OR: "#ffa500",
-      YL: "#FFFF00",
-      PK: "#ff3399",
-      MT: "#64b9b2",
-      PU: "#a020f0",
-      IV: "#ece6cc",
-      BE: "#f5dcb7",
-      DG: "#A9A9A9",
+
+  WH: "#ffffff",       // WHITE
+  BK: "#000000",       // BLACK
+  GA: "#969696",       // GRAY
+  RD: "#ff0000",       // RED
+  BL: "#0000ff",       // BLUE
+  NV: "#2c3e50",       // NAVY
+  NE: "#80e961",       // NEON GREEN
+  GR: "#009900",       // GREEN
+  OR: "#ffa500",       // ORANGE
+  YL: "#ffff00",       // YELLOW
+  SB: "#87ceeb",       // SKY BLUE
+  PK: "#ff69b4",       // PINK
+  MT: "#64b9b2",       // MINT
+  WN: "#722f37",       // WINE
+  SV: "#c0c0c0",       // SILVER
+  PU: "#a020f0",       // PURPLE
+  DG: "#323232",       // DARK GRAY
+  IV: "#f3e9d0",       // IVORY
+  BE: "#d8c9b6",       // BEIGE
+
+  // 복합 색상 (linear-gradient)
+  RK: "linear-gradient(to right, #ff0000 50%, #000000 50%)", // RED/BLACK,
+  WK: "linear-gradient(to right, #ffffff 50%, #000000 50%)", // WHITE/BLACK,
+  WP: "linear-gradient(to right, #ffffff 50%, #a020f0 50%)", // WHITE/PURPLE,
+  AK: "linear-gradient(to right, #969696 50%, #000000 50%)", // GRAY/BLACK,
+  NK: "linear-gradient(to right, #2c3e50 50%, #000000 50%)", // NAVY/BLACK,
+  AL: "linear-gradient(to right, #969696 50%, #0000ff 50%)", // GRAY/BLUE,
+  AR: "linear-gradient(to right, #969696 50%, #ff0000 50%)", // GRAY/RED,
+  AN: "linear-gradient(to right, #969696 50%, #2c3e50 50%)", // GRAY/NAVY,
+  NB: "linear-gradient(to right, #2c3e50 50%, #0000ff 50%)", // NAVY/BLUE,
+  KA: "linear-gradient(to right, #000000 50%, #969696 50%)", // BLACK/GRAY,
+  NG: "linear-gradient(to right, #80e961 50%, #009900 50%)", // NEON/GREEN,
+  NO: "linear-gradient(to right, #80e961 50%, #ffa500 50%)", // NEON/ORANGE,
+
+
     };
   
     const table = document.getElementById("inventoryTable");
@@ -954,11 +969,15 @@ productColor: "NE",
       data.forEach(item => {
         // 메인 데이터 행 생성
         const row = document.createElement("tr");
-        const colorHex = colorCodeMap[item.productColor] || "transparent";
+        //const colorHex = colorCodeMap[item.productColor] || "transparent";
+const rawColorKey = item.productColor;
+const colorKey = rawColorKey.replace(/\//g, ""); // RK, WK 등 일치
+const colorStyle = colorCodeMap[colorKey] || "transparent";
+
         row.innerHTML = `
           <td>${item.locate}</td>
           <td>${item.productCode}</td>
-          <td><span class="color-box" style="background-color: ${colorHex};"></span>${item.productColor}</td>
+          <td><span class="color-box" style="background: ${colorStyle};"></span>${item.productColor}</td>
           <td>${item.productName}</td>
           <td><button class="toggle-detail">재고</button></td>
         `;
