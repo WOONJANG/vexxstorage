@@ -1072,10 +1072,9 @@ if (sizeInfo.length > 0) {
 
 
 
-  // 1) 초성 배열 정의 (변경 없음)
+   // 1) 초성 배열 & getInitials 함수는 그대로 사용  
   const CHO_SEONG = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
 
-  // 2) 문자열에서 초성만 뽑아내는 함수 (변경 없음)
   function getInitials(str) {
     return Array.from(str).map(ch => {
       const code = ch.charCodeAt(0) - 0xAC00;
@@ -1089,22 +1088,20 @@ if (sizeInfo.length > 0) {
     }).join('');
   }
 
-  // 3) 필터 함수 수정: 초성에서 공백 제거 후 검사
+  // 2) filterData 함수 수정: 공백 무시 매칭 로직 추가
   function filterData() {
-    const val = document
-      .getElementById("IntegratedSearch")
-      .value
-      .trim()
-      .toLowerCase();
+    // 검색어에서 공백 제거
+    const raw = document.getElementById("IntegratedSearch").value.trim().toLowerCase();
+    const val = raw.replace(/\s+/g, '');
 
     const filtered = inventoryData.filter(item => {
-      // 3‑1) 기존 전체 텍스트 매칭
-      const fullTextMatch =
-        item.locate.toLowerCase().includes(val) ||
-        item.productCode.toLowerCase().includes(val) ||
-        item.productName.toLowerCase().includes(val);
+      // (가) 전체 텍스트 매칭: 공백 제거 후 비교
+      const loc  = item.locate.toLowerCase().replace(/\s+/g, '');
+      const code = item.productCode.toLowerCase().replace(/\s+/g, '');
+      const name = item.productName.toLowerCase().replace(/\s+/g, '');
+      const fullTextMatch = loc.includes(val) || code.includes(val) || name.includes(val);
 
-      // 3‑2) 초성만 추출 → 공백 제거
+      // (나) 초성 매칭: 초성 문자열과 검색어 모두 공백 제거
       const initials = getInitials(item.productName).replace(/\s+/g, '');
       const initialMatch = initials.includes(val);
 
@@ -1114,7 +1111,7 @@ if (sizeInfo.length > 0) {
     renderTable(filtered);
   }
 
-  // 4) 이벤트 리스너 재등록
+  // 3) 이벤트 리스너 등록
   inputs.forEach(input => input.addEventListener("input", filterData));
   renderTable(inventoryData);
 
