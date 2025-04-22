@@ -1072,24 +1072,24 @@ if (sizeInfo.length > 0) {
 
 
 
-// 1. 초성 배열 정의
+  // 1) 초성 배열 정의 (변경 없음)
   const CHO_SEONG = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
 
-  // 2. 문자열에서 초성만 뽑아내는 함수
+  // 2) 문자열에서 초성만 뽑아내는 함수 (변경 없음)
   function getInitials(str) {
     return Array.from(str).map(ch => {
-      const code = ch.charCodeAt(0) - 0xAC00; // 한글 완성형 시작 코드
+      const code = ch.charCodeAt(0) - 0xAC00;
       if (code >= 0 && code < 11172) {
         const jong = code % 28;
         const jung = ((code - jong) / 28) % 21;
         const cho  = ((code - jong) / 28 - jung) / 21;
         return CHO_SEONG[cho];
       }
-      return ch; // 한글이 아니면 원문 유지
+      return ch;
     }).join('');
   }
 
-  // 3. 필터 함수 수정: 제품명 초성 매칭 추가
+  // 3) 필터 함수 수정: 초성에서 공백 제거 후 검사
   function filterData() {
     const val = document
       .getElementById("IntegratedSearch")
@@ -1098,14 +1098,14 @@ if (sizeInfo.length > 0) {
       .toLowerCase();
 
     const filtered = inventoryData.filter(item => {
-      // 기존 검사: 위치, 코드, 이름 전체 텍스트
+      // 3‑1) 기존 전체 텍스트 매칭
       const fullTextMatch =
         item.locate.toLowerCase().includes(val) ||
         item.productCode.toLowerCase().includes(val) ||
         item.productName.toLowerCase().includes(val);
 
-      // 초성 검사: 제품명만 초성으로 변환
-      const initials = getInitials(item.productName);
+      // 3‑2) 초성만 추출 → 공백 제거
+      const initials = getInitials(item.productName).replace(/\s+/g, '');
       const initialMatch = initials.includes(val);
 
       return fullTextMatch || initialMatch;
@@ -1114,7 +1114,7 @@ if (sizeInfo.length > 0) {
     renderTable(filtered);
   }
 
-  // 4. 이벤트 리스너에도 적용된 필터 함수 사용
+  // 4) 이벤트 리스너 재등록
   inputs.forEach(input => input.addEventListener("input", filterData));
   renderTable(inventoryData);
 
